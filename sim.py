@@ -4,9 +4,9 @@
 # Air Traffic Control Simulator 
 # License: Apache 2.0
 
-import random, math
+import random, math, time
 
-import sim_gui, kaitak
+import sim_gui, kaitak, sound
 
 
 __version__ = '0.0.1'
@@ -20,6 +20,7 @@ APPROACHING_POINTS = (((220, 50), 100, 190),
                       ((640, 680), 280, 360),
                       ((370, 680), 0, 90),
                       ((220, 630), 35, 85))
+COMPANY_NUMBER = 12
 
 
 class Airport(object):
@@ -49,8 +50,19 @@ class Airport(object):
         for each in self._arrival_line.values():
             each.update()
 
+    def control_plane(self, code, order, num, *otras):
+
+        if code in self._ready_line:
+            self._ready_line[code].receive_order(order, num)
+        elif code in self._waiting_line:
+            self._waiting_line[code].receive_order(order, num)
+        elif code in self._arrival_line:
+            # print self._ready_line
+            self._arrival_line[code].receive_order(order, num)
+            
+
     def new_arrival_plane(self):
-        codenum = random.randrange(12)
+        codenum = random.randrange(COMPANY_NUMBER)
         num = random.randrange(30, 4000)
         point = random.choice(APPROACHING_POINTS)
         self._arrival_line[kaitak.code[codenum]+str(num)] = Plane(kaitak.companies[codenum], random.choice(kaitak.mode), 
@@ -58,7 +70,7 @@ class Airport(object):
                                                                   random.choice([5000, 6000, 7000, 8000]),
                                                                   random.randrange(240, 300), random.randrange(point[1], point[2]),
                                                                   point[0])
-        return kaitak.companies[codenum] + ', ' + ' '.join(list(str(num)))
+        return kaitak.code[codenum], kaitak.companies[codenum]+' ', num
 
 
 
@@ -69,10 +81,11 @@ class Plane(object):
         self._model = model
         self._number = number
         self._state = state
-        self._height = height
-        self._speed = speed
-        self._direction = direction
+        self._target_height = self._height = height
+        self._target_speed = self._speed = speed
+        self._target_direction = self._direction = direction
         self._place = list(place)
+
 
     def get_info(self):
         return self._model
@@ -98,26 +111,31 @@ class Plane(object):
     def get_place(self):
         return self._place
 
-    def change_altitude(self, target):
-        if self._height != target:
-            self._direction += 50 if self._height<target else self._direction-50
+    def receive_order(self, order, num):
+        time.sleep(2)
+        if order.lower() == 'c':
+            if len(num) == 3:
+                self._target_direction = int(num)
+                sound.male_report('Roger, turning to '+num)
+            elif len(num) == 1:
+                self._target_height = int(num)*1000
+                sound.male_report('Roger, maintain '+num+'000 inches.')
+        elif order.lower() == 's':
+            self._target_speed = int(num)
+            sound.male_report('Roger, speed change to '+num+' knots.')
 
-    def change_speed(self, speed):
-        if self._height != target:
-            self._direction += 10 if self._height<target else self._direction-10
 
-    def change_direction(self, target, turn=None):
-        if self._direction != target:
-            if turn:
-                self._direction += 1 if turn == 'left' else self._direction-1
-            else:
-                self._direction += 1 if abs(self._direction-target)<180 else self._direction-1
 
     def update(self):
-        print self._speed, self._direction
-        print self._speed * math.cos(self._direction/180*math.pi) / 100, self._speed * math.sin(self._direction/180*math.pi) / 100
-        self._place[0] += self._speed * math.cos((self._direction-90)/180.0*math.pi) / 300
-        self._place[1] += self._speed * math.sin((self._direction-90)/180.0*math.pi) / 300
+        # print self._direction
+        self._place[0] += self._speed * math.cos((self._direction-90)/180.0*math.pi) / 200
+        self._place[1] += self._speed * math.sin((self._direction-90)/180.0*math.pi) / 200
+        if self._height != self._target_height:
+            self._height = self._height+50 if self._height<self._target_height else self._height-50
+        if self._speed != self._target_speed:
+            self._speed = self._speed+10 if self._speed<self._target_speed else self._speed-10
+        if self._direction != self._target_direction:
+            self._direction = (self._direction+1)%360 if abs(self._target_direction-self._direction)<180 else (self._direction-1)%360
         
 
 

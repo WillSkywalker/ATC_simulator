@@ -1,9 +1,11 @@
 "Hong Kong Kai-Tak International Airport"
 
-companies = ['aeroflot', 'air india', 'all nippon', 'cathay', 'china eastern', 'china southern', 
-            'dynasty', 'emirates', 'fedex express', 'lufthansa', 'qantas', 'united']
+companies = ['Aeroflot', 'Air India', 'All Nippon', 'Cathay', 'China Eastern', 'China Southern', 
+            'Dynasty', 'Emirates', 'FedEx Express', 'Lufthansa', 'Qantas', 'United']
             
 code = ['SU', 'AI', 'NH', 'CX', 'MU', 'CZ', 'CI', 'EK', 'FX', 'LH', 'QF', 'UA']
+
+
 mode = ['Boeing 737-700',
         'Boeing 737-800',
         'Boeing 737-900',
@@ -35,7 +37,7 @@ mode = ['Boeing 737-700',
         'Bombardier CRJ-900']
 
 
-greetings = ['Hello Hong Kong, ', 'Good Day, Hong Kong approaching, ', 'Kai Tai, this is ', 
+greetings = ['Hong Kong ground, ', 'Good Day, Hong Kong approaching, ', 'Kai Tai, this is ', 
              'Hong Kong approaching, this is ', 'Greeting, Hong Kong. ']
 
 
