@@ -25,7 +25,8 @@ COMPANY_NUMBER = 12
 
 class Airport(object):
 
-    def __init__(self, runway=[(270, 275), (330, 275)], runway_available=[True], wind_direction=0, wind_speed=0):
+    def __init__(self, runway=[(270, 275), (330, 275)], runway_available=[True], 
+                 wind_direction=0, wind_speed=0):
         self._runway = runway
         self._runway_available = runway_available
         self._wind_direction = wind_direction
@@ -35,7 +36,8 @@ class Airport(object):
         self._arrival_line = {}
 
     def get_runway(self):
-        return self._runway[0][0]+215, self._runway[0][1]+40, self._runway[1][0]+215, self._runway[1][1]+40
+        return (self._runway[0][0]+215, self._runway[0][1]+40, 
+                self._runway[1][0]+215, self._runway[1][1]+40)
 
     def get_arrival_line(self):
         return self._arrival_line
@@ -51,32 +53,32 @@ class Airport(object):
             each.update()
 
     def control_plane(self, code, order, num, *otras):
-
-        if code in self._ready_line:
-            self._ready_line[code].receive_order(order, num)
-        elif code in self._waiting_line:
-            self._waiting_line[code].receive_order(order, num)
-        elif code in self._arrival_line:
-            # print self._ready_line
-            self._arrival_line[code].receive_order(order, num)
+        if code.upper() in self._ready_line:
+            self._ready_line[code.upper()].receive_order(order, num)
+        elif code.upper() in self._waiting_line:
+            self._waiting_line[code.upper()].receive_order(order, num)
+        elif code.upper() in self._arrival_line:
+            self._arrival_line[code.upper()].receive_order(order, num)
             
 
     def new_arrival_plane(self):
         codenum = random.randrange(COMPANY_NUMBER)
         num = random.randrange(30, 4000)
         point = random.choice(APPROACHING_POINTS)
-        self._arrival_line[kaitak.code[codenum]+str(num)] = Plane(kaitak.companies[codenum], random.choice(kaitak.mode), 
-                                                                  kaitak.code[codenum]+str(num), 'Arrival', 
-                                                                  random.choice([5000, 6000, 7000, 8000]),
-                                                                  random.randrange(240, 300), random.randrange(point[1], point[2]),
-                                                                  point[0])
+        self._arrival_line[kaitak.code[codenum]+str(num)] = Plane(
+            kaitak.companies[codenum], random.choice(kaitak.mode), 
+            kaitak.code[codenum]+str(num), 'Arrival', 
+            random.choice([5000, 6000, 7000, 8000]),
+            random.randrange(240, 300), random.randrange(point[1], point[2]),
+            point[0])
         return kaitak.code[codenum], kaitak.companies[codenum]+' ', num
 
 
 
 class Plane(object):
 
-    def __init__(self, company, model, number, state='Ready', height=0, speed=0, direction=0, place=[799, 799]):
+    def __init__(self, company, model, number, state='Ready', height=0, 
+                 speed=0, direction=0, place=[799, 799]):
         self._company = company
         self._model = model
         self._number = number
@@ -112,30 +114,36 @@ class Plane(object):
         return self._place
 
     def receive_order(self, order, num):
-        time.sleep(2)
+        time.sleep(1.5)
         if order.lower() == 'c':
             if len(num) == 3:
                 self._target_direction = int(num)
-                sound.male_report('Roger, turning to '+num)
+                sound.male_report('Roger, heading '+' '.join(list(num)))
             elif len(num) == 1:
                 self._target_height = int(num)*1000
                 sound.male_report('Roger, maintain '+num+'000 inches.')
         elif order.lower() == 's':
             self._target_speed = int(num)
             sound.male_report('Roger, speed change to '+num+' knots.')
+        elif order.lower() == 'l':
+            pass
+
 
 
 
     def update(self):
-        # print self._direction
-        self._place[0] += self._speed * math.cos((self._direction-90)/180.0*math.pi) / 200
-        self._place[1] += self._speed * math.sin((self._direction-90)/180.0*math.pi) / 200
+        # print self._number, self._direction
+        self._place[0] += self._speed * math.sin((self._direction)/180.0*math.pi) / 200
+        self._place[1] += self._speed * math.cos((self._direction)/180.0*math.pi) / -200
         if self._height != self._target_height:
             self._height = self._height+50 if self._height<self._target_height else self._height-50
         if self._speed != self._target_speed:
             self._speed = self._speed+10 if self._speed<self._target_speed else self._speed-10
         if self._direction != self._target_direction:
-            self._direction = (self._direction+1)%360 if abs(self._target_direction-self._direction)<180 else (self._direction-1)%360
+            self._direction = (self._direction+1)%360 \
+                if 0<(self._target_direction-self._direction)<180 \
+                or (self._target_direction-self._direction)<-180 \
+                else (self._direction-1)%360
         
 
 
