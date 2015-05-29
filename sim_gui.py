@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import time, random, json
-import kaitak, sound
+import sound
 import Tkinter as Tk
 # from sim import __version__
 
@@ -9,6 +9,7 @@ PHOTOS = {}
 ORDERS = {'c': 'Clear to ',
           's': 'Change your speed to ',
           'l': 'Clear to land at Runway'}
+greetings = json.load(open('sound_material.json'))['greetings']
 
 class SimulatorGUI():
 
@@ -41,7 +42,7 @@ class SimulatorGUI():
         PHOTOS['United'] = Tk.PhotoImage(file='logos/united.gif')
         PHOTOS['UPS'] = Tk.PhotoImage(file='logos/ups.gif')
         bg = Tk.PhotoImage(file='logos/background.gif')
-        greetings = json.load(open('sound_material.json'))['greetings']
+        
 
         self._frame.create_image(402, 20, image=bg)
         self._frame.create_line(*self._airport.get_runway(), width=4, fill='white')
@@ -63,7 +64,7 @@ class SimulatorGUI():
             if self._count == 6.5 or self._count == 100:
                 sound_text = self._airport.new_arrival_plane()
                 self._frame.delete('radio')
-                greet = random.choice(kaitak.greetings)
+                greet = random.choice(greetings)
                 sound.male_report(greet+sound_text[1]+' '.join(list(str(sound_text[2]))))
                 self.radio_draw(sound_text[0]+str(sound_text[2])+': '\
                                 +greet+sound_text[1]+str(sound_text[2]))
