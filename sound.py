@@ -3,7 +3,7 @@ import os, random
 if os.name == 'nt':
     import winsound
 
-males = ['', ' -v Daniel', ' -v Bruce', ' -v Fred']
+males = [' -v Daniel', ' -v Bruce', ' -v Fred']
 
 def male_report_clean(words):
     if os.name == 'posix':

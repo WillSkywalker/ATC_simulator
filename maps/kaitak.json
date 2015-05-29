@@ -1,8 +1,13 @@
 {
-    "name": "Hong Kong Kai-Tak International Airport",
+    "full_name": "Hong Kong Kai-Tak International Airport",
+
+    "runway": [[275, 245], [325, 355]],
+
+    "runway_point": {"13": [[490, 285], 154],
+                     "31": [[540, 395], 334]},
 
     "companies": ["Aeroflot", "Air India", "All Nippon", "Cathay", "China Eastern", "China Southern", 
-                "Dynasty", "Emirates", "Fedex Expression", "Lufthansa", "Qantas", "United", "UPS"],
+                "Dynasty", "Emirates", "Fedex Express", "Lufthansa", "Qantas", "United", "UPS"],
                 
     "code": ["SU", "AI", "NH", "CX", "MU", "CZ", "CI", "EK", "FX", "LH", "QF", "UA", "5X"],
 
@@ -22,8 +27,6 @@
             "Boeing 777-9X",
             "Boeing 787-8",
             "Boeing 787-9",
-            "Boeing 737",
-            "Boeing 737",
             "Airbus A319",
             "Airbus A320",
             "Airbus A321",

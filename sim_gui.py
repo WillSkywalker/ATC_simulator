@@ -8,7 +8,7 @@ import Tkinter as Tk
 PHOTOS = {}
 ORDERS = {'c': 'Clear to ',
           's': 'Change your speed to ',
-          'l': 'Clear to land at Runway'}
+          'l': 'Clear to land at Runway '}
 greetings = json.load(open('sound_material.json'))['greetings']
 
 class SimulatorGUI():
@@ -28,19 +28,21 @@ class SimulatorGUI():
         self.input_move.grid(row=1)
         # self._root.after(500, self.tick)
 
-        PHOTOS['Aeroflot'] = Tk.PhotoImage(file='logos/aeroflot.gif')
-        PHOTOS['Air India'] = Tk.PhotoImage(file='logos/air india.gif')
-        PHOTOS['All Nippon'] = Tk.PhotoImage(file='logos/all nippon.gif')
-        PHOTOS['Cathay'] = Tk.PhotoImage(file='logos/cathay.gif')
-        PHOTOS['China Eastern'] = Tk.PhotoImage(file='logos/china eastern.gif')
-        PHOTOS['China Southern'] = Tk.PhotoImage(file='logos/china southern.gif')
-        PHOTOS['Dynasty'] = Tk.PhotoImage(file='logos/dynasty.gif')
-        PHOTOS['Emirates'] = Tk.PhotoImage(file='logos/emirates.gif')
-        PHOTOS['FedEx Express'] = Tk.PhotoImage(file='logos/fedex express.gif')
-        PHOTOS['Lufthansa'] = Tk.PhotoImage(file='logos/lufthansa.gif')
-        PHOTOS['Qantas'] = Tk.PhotoImage(file='logos/qantas.gif')
-        PHOTOS['United'] = Tk.PhotoImage(file='logos/united.gif')
-        PHOTOS['UPS'] = Tk.PhotoImage(file='logos/ups.gif')
+        for name in self._airport.get_companies():
+            PHOTOS[name] = Tk.PhotoImage(file='logos/'+name.lower()+'.gif')
+        # PHOTOS['Aeroflot'] = Tk.PhotoImage(file='logos/aeroflot.gif')
+        # PHOTOS['Air India'] = Tk.PhotoImage(file='logos/air india.gif')
+        # PHOTOS['All Nippon'] = Tk.PhotoImage(file='logos/all nippon.gif')
+        # PHOTOS['Cathay'] = Tk.PhotoImage(file='logos/cathay.gif')
+        # PHOTOS['China Eastern'] = Tk.PhotoImage(file='logos/china eastern.gif')
+        # PHOTOS['China Southern'] = Tk.PhotoImage(file='logos/china southern.gif')
+        # PHOTOS['Dynasty'] = Tk.PhotoImage(file='logos/dynasty.gif')
+        # PHOTOS['Emirates'] = Tk.PhotoImage(file='logos/emirates.gif')
+        # PHOTOS['FedEx Express'] = Tk.PhotoImage(file='logos/fedex express.gif')
+        # PHOTOS['Lufthansa'] = Tk.PhotoImage(file='logos/lufthansa.gif')
+        # PHOTOS['Qantas'] = Tk.PhotoImage(file='logos/qantas.gif')
+        # PHOTOS['United'] = Tk.PhotoImage(file='logos/united.gif')
+        # PHOTOS['UPS'] = Tk.PhotoImage(file='logos/ups.gif')
         bg = Tk.PhotoImage(file='logos/background.gif')
         
 
@@ -69,8 +71,10 @@ class SimulatorGUI():
                 self.radio_draw(sound_text[0]+str(sound_text[2])+': '\
                                 +greet+sound_text[1]+str(sound_text[2]))
                 self._count = 0
-
-        self._airport.update()
+        try:
+            self._airport.update()
+        except EOFError, e:
+            self.radio_draw(str(e))
         self.ord_draw(self._frame)
         self._root.after(500, self.tick)
         self._count += 1
@@ -86,10 +90,15 @@ class SimulatorGUI():
     def enter_order(self, event):
         raw_order = self.input_move.get()
         order = raw_order.split()
-        sound.male_report_clean(' '.join(list(order[0]))+', '+ORDERS[order[1].lower()]\
-                                +(' '.join(list(order[2]))))
-        self.radio_draw('Ground: '+order[0].upper()+', '+ORDERS[order[1].lower()]+order[2]+'.')
-        self._airport.control_plane(*order)
+        try:
+            sound.male_report_clean(' '.join(list(order[0]))+', '+ORDERS[order[1].lower()]\
+                                    +(' '.join(list(order[2]))))
+            self.radio_draw('Ground: '+order[0].upper()+', '+ORDERS[order[1].lower()]+order[2]+'.')
+        except KeyError: pass
+        try:
+            self._airport.control_plane(*order)
+        except ValueError, e:
+            self.radio_draw(str(e))
         self.input_move.delete(0, 100)
 
     def radio_draw(self, attention):
