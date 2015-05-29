@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import time, random
+import time, random, json
 import kaitak, sound
 import Tkinter as Tk
 # from sim import __version__
@@ -41,6 +41,7 @@ class SimulatorGUI():
         PHOTOS['United'] = Tk.PhotoImage(file='logos/united.gif')
         PHOTOS['UPS'] = Tk.PhotoImage(file='logos/ups.gif')
         bg = Tk.PhotoImage(file='logos/background.gif')
+        greetings = json.load(open('sound_material.json'))['greetings']
 
         self._frame.create_image(402, 20, image=bg)
         self._frame.create_line(*self._airport.get_runway(), width=4, fill='white')
@@ -50,7 +51,7 @@ class SimulatorGUI():
             self._airport.get_runway()[3]+8, text='31', fill='white')
         self._frame.create_line(0, 40, 803, 40, width=5)
         self._frame.create_line(210, 40, 210, 693, width=5)
-        self._frame.create_text(130, 20, text=kaitak.__doc__, fill='white')
+        self._frame.create_text(130, 20, text=self._airport.full_name, fill='white')
         self._frame.create_rectangle(0, 690, 800, 720, fill='black')
         self._count = 0.5
 

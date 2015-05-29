@@ -4,9 +4,9 @@
 # Air Traffic Control Simulator 
 # License: Apache 2.0
 
-import random, math, time
+import random, math, time, json
 
-import sim_gui, kaitak, sound
+import sim_gui, sound
 
 
 __version__ = '0.0.1'
@@ -23,10 +23,14 @@ APPROACHING_POINTS = (((220, 50), 100, 190),
 COMPANY_NUMBER = 12
 
 
+def choose_airport(name):
+    return json.load(open('maps/'+name+'.json'))
+
+
 class Airport(object):
 
     def __init__(self, runway=[(270, 275), (330, 275)], runway_available=[True], 
-                 wind_direction=0, wind_speed=0):
+                 wind_direction=0, wind_speed=0, full_name='Galastic Parliament Field'):
         self._runway = runway
         self._runway_available = runway_available
         self._wind_direction = wind_direction
@@ -34,6 +38,7 @@ class Airport(object):
         self._ready_line = {}
         self._waiting_line = {}
         self._arrival_line = {}
+        self.full_name = full_name
 
     def get_runway(self):
         return (self._runway[0][0]+215, self._runway[0][1]+40, 
@@ -65,13 +70,13 @@ class Airport(object):
         codenum = random.randrange(COMPANY_NUMBER)
         num = random.randrange(30, 4000)
         point = random.choice(APPROACHING_POINTS)
-        self._arrival_line[kaitak.code[codenum]+str(num)] = Plane(
-            kaitak.companies[codenum], random.choice(kaitak.mode), 
-            kaitak.code[codenum]+str(num), 'Arrival', 
+        self._arrival_line[the_map['code'][codenum]+str(num)] = Plane(
+            the_map['companies'][codenum], random.choice(the_map['mode']), 
+            the_map['code'][codenum]+str(num), 'Arrival', 
             random.choice([5000, 6000, 7000, 8000]),
             random.randrange(240, 300), random.randrange(point[1], point[2]),
             point[0])
-        return kaitak.code[codenum], kaitak.companies[codenum]+' ', num
+        return the_map['code'][codenum], the_map['companies'][codenum]+' ', num
 
 
 
@@ -148,7 +153,8 @@ class Plane(object):
 
 
 if __name__ == '__main__':
-    sim_gui.SimulatorGUI(Airport([(275, 245), (325, 355)]))
+    the_map = choose_airport('kaitak')
+    sim_gui.SimulatorGUI(Airport([(275, 245), (325, 355)], full_name=the_map['name']))
 
         
 
