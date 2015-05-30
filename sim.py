@@ -69,7 +69,6 @@ class Airport(object):
             each.update()
             if each.get_height() == 0:
                 del self._arrival_line[each.get_number()]
-                print self._arrival_line
                 raise EOFError, each.get_number()+': '+ \
                     sound.male_report("We have landed at Runway "+each.get_landing_way()+'. Thank you.')
                 
@@ -156,7 +155,7 @@ class Plane(Airport):
             if self._height > 3000:
                 raise ValueError, self._number+': '+ \
                     sound.male_report("Negative, we are too high to land now.")
-            elif abs(self._direction - the_map['runway_point'][num][1]) > 45 or \
+            elif (315 > abs(self._direction - the_map['runway_point'][num][1]) > 45)or \
                 math.sqrt((self._place[0]-the_map['runway_point'][num][0][0])**2 \
                 +(self._place[1]-the_map['runway_point'][num][0][1])**2) > 150:
 

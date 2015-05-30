@@ -30,19 +30,6 @@ class SimulatorGUI():
 
         for name in self._airport.get_companies():
             PHOTOS[name] = Tk.PhotoImage(file='logos/'+name.lower()+'.gif')
-        # PHOTOS['Aeroflot'] = Tk.PhotoImage(file='logos/aeroflot.gif')
-        # PHOTOS['Air India'] = Tk.PhotoImage(file='logos/air india.gif')
-        # PHOTOS['All Nippon'] = Tk.PhotoImage(file='logos/all nippon.gif')
-        # PHOTOS['Cathay'] = Tk.PhotoImage(file='logos/cathay.gif')
-        # PHOTOS['China Eastern'] = Tk.PhotoImage(file='logos/china eastern.gif')
-        # PHOTOS['China Southern'] = Tk.PhotoImage(file='logos/china southern.gif')
-        # PHOTOS['Dynasty'] = Tk.PhotoImage(file='logos/dynasty.gif')
-        # PHOTOS['Emirates'] = Tk.PhotoImage(file='logos/emirates.gif')
-        # PHOTOS['FedEx Express'] = Tk.PhotoImage(file='logos/fedex express.gif')
-        # PHOTOS['Lufthansa'] = Tk.PhotoImage(file='logos/lufthansa.gif')
-        # PHOTOS['Qantas'] = Tk.PhotoImage(file='logos/qantas.gif')
-        # PHOTOS['United'] = Tk.PhotoImage(file='logos/united.gif')
-        # PHOTOS['UPS'] = Tk.PhotoImage(file='logos/ups.gif')
         bg = Tk.PhotoImage(file='logos/background.gif')
         
 
