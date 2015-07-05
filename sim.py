@@ -158,9 +158,6 @@ class Plane(Airport):
             elif (315 > abs(self._direction - the_map['runway_point'][num][1]) > 45)or \
                 math.sqrt((self._place[0]-the_map['runway_point'][num][0][0])**2 \
                 +(self._place[1]-the_map['runway_point'][num][0][1])**2) > 150:
-
-                # print self._place, the_map['runway_point'][num]
-                # print math.sqrt((self._place[0]-the_map['runway_point'][num][0][0])**2 + (self._place[1]-the_map['runway_point'][str(num)][0][1])**2)
                 raise ValueError, self._number+': '+ \
                     sound.male_report("Negative, we are too far away from the runway.")
             else:
@@ -168,8 +165,10 @@ class Plane(Airport):
                 self._target_speed = random.randrange(120, 160)
                 self._target_height = random.randrange(600, 900)
                 sound.male_report("Roger, we are approaching the runway.")
-                self._target_direction = math.degrees(math.atan2((the_map['runway_point'][num][0][0]-self._place[0]), 
-                                                    (the_map['runway_point'][num][0][1]-self._place[1])))%360
+                self._target_direction = math.degrees(math.atan2((the_map['runway_point']\
+                                                      [num][0][0]-self._place[0]), 
+                                                      (the_map['runway_point'][num][0][1]\
+                                                      -self._place[1])))%360
                 self._landing_way = num
         else:
             raise ValueError, self._number+': '+ \
@@ -192,10 +191,13 @@ class Plane(Airport):
                 or (self._target_direction-self._direction)<-180 \
                 else (self._direction-1)%360
         if self._state == 'Landing':
-            self._target_direction = math.degrees(math.atan2((the_map['runway_point'][self._landing_way][0][0]-self._place[0]), 
-                                                 (self._place[1]-the_map['runway_point'][self._landing_way][0][1])))%360
+            self._target_direction = math.degrees(math.atan2((the_map['runway_point']\
+                                                 [self._landing_way][0][0]-self._place[0]), 
+                                                 (self._place[1]-the_map['runway_point']\
+                                                 [self._landing_way][0][1])))%360
             compare = math.degrees(math.atan2((540-self._place[0]), (self._place[1]-395)))%360
-            if abs(self._place[0]-the_map['runway_point'][self._landing_way][0][0])<5 and abs(self._place[1]-the_map['runway_point'][self._landing_way][0][1])<5:
+            if abs(self._place[0]-the_map['runway_point'][self._landing_way][0][0])<5 and \
+               abs(self._place[1]-the_map['runway_point'][self._landing_way][0][1])<5:
                 self._target_height = 0
                 self._target_direction = the_map['runway_point'][self._landing_way][1]
                 self._target_speed = 1
