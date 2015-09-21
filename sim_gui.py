@@ -10,6 +10,7 @@ ORDERS = {'c': 'Clear to ',
           's': 'Change your speed to ',
           'l': 'Clear to land at Runway '}
 greetings = json.load(open('sound_material.json'))['greetings']
+callsign = {name: sign for name, sign in zip(json.load(open('sound_material.json'))['code'], json.load(open('sound_material.json'))['companies'])}
 
 class SimulatorGUI():
 
@@ -78,10 +79,11 @@ class SimulatorGUI():
         raw_order = self.input_move.get()
         order = raw_order.split()
         try:
-            sound.male_report_clean(' '.join(list(order[0]))+', '+ORDERS[order[1].lower()]\
+            sound.male_report_clean(callsign[order[0][:2].upper()]+' '.join(list(order[0][2:]))+', '+ORDERS[order[1].lower()]\
                                     +(' '.join(list(order[2]))))
-            self.radio_draw('Ground: '+order[0].upper()+', '+ORDERS[order[1].lower()]+order[2]+'.')
-        except KeyError: pass
+            self.radio_draw('Ground: '+callsign[order[0][:2].upper()]+' '+order[0][2:].upper()+', '+ORDERS[order[1].lower()]+order[2]+'.')
+        except KeyError: print callsign[order[0][:2]]+' '.join(list(order[0][2:]))+', '+ORDERS[order[1].lower()]\
+                                    +(' '.join(list(order[2])))
         try:
             self._airport.control_plane(*order)
         except ValueError, e:

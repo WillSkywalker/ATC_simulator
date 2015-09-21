@@ -1,5 +1,10 @@
 {
     "greetings": ["Hong Kong ground, ", "Good Day, Hong Kong approaching, ", "Kai Tai, this is ", 
-             "Hong Kong approaching, this is ", "Greeting, Hong Kong. "]
+             "Hong Kong approaching, this is ", "Greeting, Hong Kong. "],
+
+    "companies": ["Aeroflot", "Air India", "All Nippon", "Cathay", "China Eastern", "China Southern", 
+                "Dynasty", "Emirates", "Fedex Express", "Lufthansa", "Qantas", "United", "UPS"],
+                
+    "code": ["SU", "AI", "NH", "CX", "MU", "CZ", "CI", "EK", "FX", "LH", "QF", "UA", "5X"]
 
 }

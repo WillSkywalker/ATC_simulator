@@ -13,7 +13,7 @@
 
     "mode": ["Boeing 737-700",
             "Boeing 737-800",
-            "Boeing 737-900",
+            "Boeing 737-900ER",
             "Boeing 747-400",
             "Boeing 747-8",
             "Boeing 757-200",
@@ -38,7 +38,7 @@
             "Airbus A340-500",
             "Airbus A340-600",
             "Airbus A380-800",
-            "Airbus A350XWB",
+            "Airbus A350-800",
             "Bombardier CRJ-900"]
 }
 
